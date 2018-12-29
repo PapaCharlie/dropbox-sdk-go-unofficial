@@ -3053,6 +3053,10 @@ const (
 func (u *SaveUrlResult) UnmarshalJSON(body []byte) error {
 	type wrap struct {
 		dropbox.Tagged
+		// AsyncJobId : This response indicates that the processing is asynchronous.
+		// The string is an id that can be used to obtain the status of the
+		// asynchronous job.
+		AsyncJobId json.RawMessage `json:"async_job_id,omitempty"`
 		// Complete : Metadata of the file where the URL is saved to.
 		Complete json.RawMessage `json:"complete,omitempty"`
 	}
@@ -3064,13 +3068,13 @@ func (u *SaveUrlResult) UnmarshalJSON(body []byte) error {
 	u.Tag = w.Tag
 	switch u.Tag {
 	case "async_job_id":
-		err = json.Unmarshal(body, &u.AsyncJobId)
+		err = json.Unmarshal(w.AsyncJobId, &u.AsyncJobId)
 
 		if err != nil {
 			return err
 		}
 	case "complete":
-		err = json.Unmarshal(body, &u.Complete)
+		err = json.Unmarshal(w.Complete, &u.Complete)
 
 		if err != nil {
 			return err
